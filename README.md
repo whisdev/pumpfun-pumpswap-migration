@@ -2,7 +2,7 @@
 
 A specialized tool for migrating tokens from pump.fun bonding curves to pump.amm AMM pools on Solana. This project provides a streamlined migration function that handles the complex process of moving tokens from the bonding curve model to the AMM model.
 
-## 🚀 Features
+## Features
 
 - **Atomic Migration**: Complete migration in a single transaction
 - **Jito Bundle Support**: Handles large transactions through Jito bundles
@@ -10,7 +10,46 @@ A specialized tool for migrating tokens from pump.fun bonding curves to pump.amm
 - **Automatic Pool Detection**: Detects and validates pool existence
 - **Transaction Size Management**: Handles oversized transactions automatically
 
-## ⚙️ Environment Configuration
+## Migration Workflow Diagram
+
+```mermaid
+graph TD
+    A[pump.fun Bonding Curve] --> B{Complete?}
+    B -->|No| A
+    B -->|Yes| C[Trigger Migration]
+    
+    C --> D[Calculate Migration Cost]
+    D --> E{Acceptable Fee?}
+    E -->|No| F[Abort Migration]
+    E -->|Yes| G[Prepare Transaction]
+    
+    G --> H[Create pump.fun Swap Instruction]
+    G --> I[Create Migration Instruction]
+    G --> J[Create pump.amm Buy Instruction]
+    
+    H --> K[Bundle Instructions]
+    I --> K
+    J --> K
+    
+    K --> L{Transaction Size > 1232 bytes?}
+    L -->|Yes| M[Use Jito Bundle]
+    L -->|No| N[Standard Transaction]
+    
+    M --> O[Execute Jito Bundle]
+    N --> P[Execute Standard Transaction]
+    
+    O --> Q[Transaction Confirmed]
+    P --> Q
+    
+    Q --> R[pump.amm Pool Launched]
+    R --> S[Development Buy Available]
+    
+    S --> T[Monitor Pool State]
+    T --> U[Verify Migration Success]
+    
+```
+
+## Environment Configuration
 
 Create a `.env` file with the following variables:
 
